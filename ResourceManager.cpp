@@ -323,7 +323,14 @@ ProfileManager* ResourceManager::GetProfileManager()
 
 std::vector<RGBController*> & ResourceManager::GetRGBControllers()
 {
-    return rgb_controllers;
+    return(rgb_controllers);
+}
+
+std::vector<RGBControllerInterface*> ResourceManager::GetRGBBControllerInterfaces()
+{
+    std::vector<RGBControllerInterface*> rgb_controller_interfaces(rgb_controllers.begin(), rgb_controllers.end());
+
+    return(rgb_controller_interfaces);
 }
 
 NetworkServer* ResourceManager::GetServer()

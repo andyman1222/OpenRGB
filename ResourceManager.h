@@ -60,6 +60,7 @@ public:
     PluginManagerInterface*             GetPluginManager();
     ProfileManager*                     GetProfileManager();
     std::vector<RGBController*>&        GetRGBControllers();
+    std::vector<RGBControllerInterface*>    GetRGBBControllerInterfaces();
     NetworkServer*                      GetServer();
     SettingsManager*                    GetSettingsManager();
 

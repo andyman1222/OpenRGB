@@ -36,12 +36,12 @@ void OpenRGBPluginAPI::LogEntry(const char* filename, int line, unsigned int lev
 /*---------------------------------------------------------*\
 | PluginManager APIs                                        |
 \*---------------------------------------------------------*/
-static void CallRegisterRGBController(OpenRGBPluginAPI * this_ptr, RGBController * rgb_controller)
+static void CallRegisterRGBController(OpenRGBPluginAPI* this_ptr, RGBControllerInterface* rgb_controller)
 {
     this_ptr->RegisterRGBController(rgb_controller);
 }
 
-void OpenRGBPluginAPI::RegisterRGBControllerInThread(RGBController * rgb_controller)
+void OpenRGBPluginAPI::RegisterRGBControllerInThread(RGBControllerInterface* rgb_controller)
 {
     /*-----------------------------------------------------*\
     | To avoid deadlocks if this is called from a UI thread |
@@ -51,20 +51,20 @@ void OpenRGBPluginAPI::RegisterRGBControllerInThread(RGBController * rgb_control
     register_thread.detach();
 }
 
-void OpenRGBPluginAPI::RegisterRGBController(RGBController * rgb_controller)
+void OpenRGBPluginAPI::RegisterRGBController(RGBControllerInterface* rgb_controller)
 {
     LOG_INFO("[PluginManager] Registering RGB controller %s", rgb_controller->GetName().c_str());
 
     /*-----------------------------------------------------*\
     | Mark this controller as locally owned                 |
     \*-----------------------------------------------------*/
-    rgb_controller->flags &= ~CONTROLLER_FLAG_REMOTE;
-    rgb_controller->flags |= CONTROLLER_FLAG_LOCAL;
+    //rgb_controller->flags &= ~CONTROLLER_FLAG_REMOTE;
+    //rgb_controller->flags |= CONTROLLER_FLAG_LOCAL;
 
-    /*-----------------------------------------------------*\
-    | Add the new controller to the list                    |
-    \*-----------------------------------------------------*/
-    rgb_controllers.push_back(rgb_controller);
+    ///*-----------------------------------------------------*\
+    //| Add the new controller to the list                    |
+    //\*-----------------------------------------------------*/
+    //rgb_controllers.push_back(rgb_controller);
 
     /*-----------------------------------------------------*\
     | Signal device list update in ResourceManager          |
@@ -72,12 +72,12 @@ void OpenRGBPluginAPI::RegisterRGBController(RGBController * rgb_controller)
     ResourceManager::get()->UpdateDeviceList();
 }
 
-static void CallUnregisterRGBController(OpenRGBPluginAPI * this_ptr, RGBController * rgb_controller)
+static void CallUnregisterRGBController(OpenRGBPluginAPI* this_ptr, RGBControllerInterface* rgb_controller)
 {
     this_ptr->UnregisterRGBController(rgb_controller);
 }
 
-void OpenRGBPluginAPI::UnregisterRGBController(RGBController * rgb_controller)
+void OpenRGBPluginAPI::UnregisterRGBController(RGBControllerInterface* rgb_controller)
 {
     LOG_INFO("[PluginManager] Unregistering RGB controller %s", rgb_controller->GetName().c_str());
 
@@ -90,7 +90,7 @@ void OpenRGBPluginAPI::UnregisterRGBController(RGBController * rgb_controller)
     | Find the controller to remove and remove it from the  |
     | master list                                           |
     \*-----------------------------------------------------*/
-    std::vector<RGBController*>::iterator rgb_it = std::find(rgb_controllers.begin(), rgb_controllers.end(), rgb_controller);
+    std::vector<RGBController*>::iterator rgb_it = std::find(rgb_controllers.begin(), rgb_controllers.end(), (RGBController*)rgb_controller);
 
     if(rgb_it != rgb_controllers.end())
     {
@@ -103,7 +103,7 @@ void OpenRGBPluginAPI::UnregisterRGBController(RGBController * rgb_controller)
     ResourceManager::get()->UpdateDeviceList();
 }
 
-void OpenRGBPluginAPI::UnregisterRGBControllerInThread(RGBController * rgb_controller)
+void OpenRGBPluginAPI::UnregisterRGBControllerInThread(RGBControllerInterface* rgb_controller)
 {
     /*-----------------------------------------------------*\
     | To avoid deadlocks if this is called from a UI thread |
@@ -164,9 +164,9 @@ void OpenRGBPluginAPI::WaitForDetection()
     resource_manager->WaitForDetection();
 }
 
-std::vector<RGBController*> & OpenRGBPluginAPI::GetRGBControllers()
+std::vector<RGBControllerInterface*> OpenRGBPluginAPI::GetRGBControllers()
 {
-    return(resource_manager->GetRGBControllers());
+    return(resource_manager->GetRGBBControllerInterfaces());
 }
 
 /*---------------------------------------------------------*\
