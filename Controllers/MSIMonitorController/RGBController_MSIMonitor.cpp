@@ -37,7 +37,7 @@ RGBController_MSIMonitor::RGBController_MSIMonitor(MSIMonitorController* control
     serial                              = controller->GetSerialString();
 
     mode Static;
-    Static.name                         = "Static";
+    Static.name                         = "Direct";
     Static.value                        = MSI_MONITOR_STATIC_MODE_VALUE;
     Static.flags                        = MODE_FLAG_HAS_PER_LED_COLOR;
     Static.color_mode                   = MODE_COLORS_PER_LED;
@@ -101,9 +101,6 @@ RGBController_MSIMonitor::RGBController_MSIMonitor(MSIMonitorController* control
     modes.push_back(Off);
 
     SetupZones();
-
-    keepalive_thread_run    = 1;
-    keepalive_thread        = new std::thread(&RGBController_MSIMonitor::KeepaliveThread, this);
 }
 
 RGBController_MSIMonitor::~RGBController_MSIMonitor()
@@ -119,7 +116,7 @@ void RGBController_MSIMonitor::SetupZones()
 {
     zone new_zone;
 
-    new_zone.name       = "Screen";
+    new_zone.name       = "Rear";
     new_zone.type       = ZONE_TYPE_LINEAR;
     new_zone.leds_min   = 9;
     new_zone.leds_max   = 9;
@@ -164,17 +161,4 @@ void RGBController_MSIMonitor::UpdateSingleLED(int /*led*/)
 void RGBController_MSIMonitor::DeviceUpdateMode()
 {
     controller->Set(modes[active_mode].value, modes[active_mode].colors);
-}
-
-void RGBController_MSIMonitor::KeepaliveThread()
-{
-    while(keepalive_thread_run.load())
-    {
-        if((modes[active_mode].value == MSI_MONITOR_STATIC_MODE_VALUE) && (std::chrono::steady_clock::now() - last_update_time) > std::chrono::milliseconds(500))
-        {
-            UpdateLEDs();
-        }
-
-        std::this_thread::sleep_for(15ms);
-    }
 }
