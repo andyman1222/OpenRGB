@@ -35,4 +35,4 @@ static void DetectMSIMonitorController(hid_device_info* info, const std::string&
     }
 }
 
-REGISTER_HID_DETECTOR_IPU("MSI Gaming Controller", DetectMSIMonitorController, MSI_USB_VID, MSI_USB_PID, 0, 0x01, 0);
+REGISTER_HID_DETECTOR_IPU("MSI Monitor (Gaming Controller)", DetectMSIMonitorController, MSI_USB_VID, MSI_USB_PID, 0, 0x01, 0);

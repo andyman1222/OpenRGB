@@ -42,7 +42,7 @@ public:
     std::string GetNameString();
     std::string GetSerialString();
 
-    void Set(uint8_t mode_value, const std::vector<RGBColor> colors);
+    void Set(uint8_t mode_value, const std::vector<RGBColor> colors, uint8_t last_bit);
 
 private:
     hid_device *dev;

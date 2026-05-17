@@ -22,8 +22,8 @@ using namespace std::chrono_literals;
     @save :robot:
     @direct :white_check_mark:
     @effects :white_check_mark:
-    @detectors DetectMSIMonitorControllers
-    @comment
+    @detectors DetectMSIMonitorController
+    @comment Developed with MSI MAG272CQR
 \*-------------------------------------------------------------------*/
 RGBController_MSIMonitor::RGBController_MSIMonitor(MSIMonitorController* controller_ptr)
 {
@@ -36,10 +36,18 @@ RGBController_MSIMonitor::RGBController_MSIMonitor(MSIMonitorController* control
     location                            = controller->GetDeviceLocation();
     serial                              = controller->GetSerialString();
 
+    //direct is static but with the last bit set to 0
+    mode Direct;
+    Direct.name                         = "Direct";
+    Direct.value                        = MSI_MONITOR_STATIC_MODE_VALUE;
+    Direct.flags                        = MODE_FLAG_HAS_PER_LED_COLOR;
+    Direct.color_mode                   = MODE_COLORS_PER_LED;
+    modes.push_back(Direct);
+
     mode Static;
-    Static.name                         = "Direct";
+    Static.name                         = "Static";
     Static.value                        = MSI_MONITOR_STATIC_MODE_VALUE;
-    Static.flags                        = MODE_FLAG_HAS_PER_LED_COLOR;
+    Static.flags                        = MODE_FLAG_HAS_PER_LED_COLOR | MODE_FLAG_AUTOMATIC_SAVE;
     Static.color_mode                   = MODE_COLORS_PER_LED;
     modes.push_back(Static);
 
@@ -145,7 +153,7 @@ void RGBController_MSIMonitor::ResizeZone(int /*zone*/, int /*new_size*/)
 void RGBController_MSIMonitor::DeviceUpdateLEDs()
 {
     last_update_time = std::chrono::steady_clock::now();
-    controller->Set(modes[active_mode].value, colors);
+    controller->Set(modes[active_mode].value, colors, active_mode == 0 ? 0x00 : 0x01);
 }
 
 void RGBController_MSIMonitor::UpdateZoneLEDs(int /*zone*/)
@@ -160,5 +168,5 @@ void RGBController_MSIMonitor::UpdateSingleLED(int /*led*/)
 
 void RGBController_MSIMonitor::DeviceUpdateMode()
 {
-    controller->Set(modes[active_mode].value, modes[active_mode].colors);
+    controller->Set(modes[active_mode].value, modes[active_mode].colors, 0x01);
 }

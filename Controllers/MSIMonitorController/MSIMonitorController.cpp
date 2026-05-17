@@ -48,7 +48,7 @@ std::string MSIMonitorController::GetSerialString()
     return(StringUtils::wstring_to_string(serial_string));
 }
 
-void MSIMonitorController::Set(uint8_t mode_value, const std::vector<RGBColor> colors)
+void MSIMonitorController::Set(uint8_t mode_value, const std::vector<RGBColor> colors, uint8_t last_bit)
 {
     /*---------------------------------------------------------*\
     | set up HID SET_REPORT                                     |
@@ -106,8 +106,9 @@ void MSIMonitorController::Set(uint8_t mode_value, const std::vector<RGBColor> c
         data[offset++] = RGBGetBValue(color);
     }
 
-    //not sure what the last byte is, data packets show either 0x00 or 0x01
-    data[offset++] = 0x01;
+    //last bit is probably a write to device bit- 0x01 saves to device, 0x00 doesn't.
+    //For direct mode, bit is set to 0x00, otherwise lights will flicker
+    data[offset++] = last_bit;
 
     /*---------------------------------------------------------*\
     | Send the data (1 packet)                                  |
