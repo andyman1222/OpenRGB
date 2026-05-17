@@ -47,7 +47,7 @@ RGBController_MSIMonitor::RGBController_MSIMonitor(MSIMonitorController* control
     mode Static;
     Static.name                         = "Static";
     Static.value                        = MSI_MONITOR_STATIC_MODE_VALUE;
-    Static.flags                        = MODE_FLAG_HAS_PER_LED_COLOR | MODE_FLAG_AUTOMATIC_SAVE;
+    Static.flags                        = MODE_FLAG_HAS_PER_LED_COLOR;
     Static.color_mode                   = MODE_COLORS_PER_LED;
     modes.push_back(Static);
 
@@ -55,22 +55,22 @@ RGBController_MSIMonitor::RGBController_MSIMonitor(MSIMonitorController* control
     mode Breathing;
     Breathing.name                  = "Breathing";
     Breathing.value                 = MSI_MONITOR_BREATHING_MODE_VALUE;
-    Breathing.flags                 = MODE_FLAG_AUTOMATIC_SAVE;
-    Breathing.color_mode            = MODE_COLORS_NONE;
+    Breathing.flags                 = MODE_FLAG_HAS_PER_LED_COLOR;
+    Breathing.color_mode            = MODE_COLORS_PER_LED;
     modes.push_back(Breathing);
 
     mode Flashing;
     Flashing.name                  = "Flashing";
     Flashing.value                 = MSI_MONITOR_FLASHING_MODE_VALUE;
-    Flashing.flags                 = MODE_FLAG_AUTOMATIC_SAVE;
-    Flashing.color_mode            = MODE_COLORS_NONE;
+    Flashing.flags                 = MODE_FLAG_HAS_PER_LED_COLOR;
+    Flashing.color_mode            = MODE_COLORS_PER_LED;
     modes.push_back(Flashing);
 
     mode Lightning;
     Lightning.name                  = "Lightning";
     Lightning.value                 = MSI_MONITOR_LIGHTNING_MODE_VALUE;
-    Lightning.flags                 = MODE_FLAG_AUTOMATIC_SAVE;
-    Lightning.color_mode            = MODE_COLORS_NONE;
+    Lightning.flags                 = MODE_FLAG_HAS_PER_LED_COLOR;
+    Lightning.color_mode            = MODE_COLORS_PER_LED;
     modes.push_back(Lightning);
 
     mode Marquee;
@@ -168,5 +168,5 @@ void RGBController_MSIMonitor::UpdateSingleLED(int /*led*/)
 
 void RGBController_MSIMonitor::DeviceUpdateMode()
 {
-    controller->Set(modes[active_mode].value, modes[active_mode].colors, 0x01);
+    controller->Set(modes[active_mode].value, colors, 0x01);
 }
