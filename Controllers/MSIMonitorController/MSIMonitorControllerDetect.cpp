@@ -37,4 +37,4 @@ void DetectMSIMonitorController
     }
 }
 
-REGISTER_HID_DETECTOR_PU("MSI Gaming Controller", DetectMSIMonitorController, MSI_USB_VID, MSI_USB_PID);
+REGISTER_HID_DETECTOR_PU("MSI Gaming Controller", DetectMSIMonitorController, MSI_USB_VID, MSI_USB_PID, 0, 0x01, 0);

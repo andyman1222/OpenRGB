@@ -60,18 +60,42 @@ void MSIMonitorController::Set(uint8_t mode_value, const std::vector<RGBColor> c
 
     unsigned int offset = 0;
 
-    data[offset] = 0x71'01'00'00'00'01'64'00'00'00'00'00
-    offset += 12
+    //0x71'01'00'00'00'01'64'00'00'00'00'00
+    data[offset++] = 0x71;
+    data[offset++] = 0x01;
+    for(int i = 0; i < 3; i++) {
+        data[offset++] = 0x00;
+    }
+    data[offset++] = 0x01;
+    data[offset++] = 0x64;
+    for(int i = 0; i < 5; i++) {
+        data[offset++] = 0x00;
+    }
 
     /*---------------------------------------------------------*\
     | put mode_value                                            |
     \*---------------------------------------------------------*/
-    data[offset++] = mode_value
+    data[offset++] = mode_value;
+
+    //0x00'00'00'01'64'00'00'00'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00;
+    
+    for(int i = 0; i < 3; i++) {
+        data[offset++] = 0x00;
+    }
+    data[offset++] = 0x01;
+    data[offset++] = 0x64;
+    for(int i = 0; i < 5; i++) {
+        data[offset++] = 0x00;
+    }
 
     //this data might be placeholder for additional LEDs in other monitors, idk
-    data[offset] = 0x00'00'00'01'64'00'00'00'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00
-    offset += 37
+    for(int i = 0; i < 9; i++) {
+        data[offset++] = 0xff;
+        data[offset++] = 0x00;
+        data[offset++] = 0x00;
+    }
 
+    //RGB values begin
     for(const RGBColor color: colors)
     {
         data[offset++] = RGBGetRValue(color);
@@ -80,7 +104,7 @@ void MSIMonitorController::Set(uint8_t mode_value, const std::vector<RGBColor> c
     }
 
     //not sure what the last byte is, data packets show either 0x00 or 0x01
-    data[offset++] = 0x01
+    data[offset++] = 0x01;
 
     /*---------------------------------------------------------*\
     | Send the data (1 packet)                                  |

@@ -9,13 +9,14 @@
 ::  * OpenRGB Qt Packages                                  ::
 ::                                                         ::
 :: Adam Honse (calcprogrammer1@gmail.com)   18 Apr 2025    ::
+:: Andy Herbert (andy@herbertland.com)      17 May 2026    ::
 ::---------------------------------------------------------::
 
-::---------------------------------------------------------::
-:: Parse arguments                                         ::
-:: Format: build-windows.bat QT_VER MSVC_VER BITS          ::
-:: Example: build-windows.bat 6.3.8 2022 64                ::
-::---------------------------------------------------------::
+::--------------------------------------------------------------------::
+:: Parse arguments                                                    ::
+:: Format: build-windows.bat QT_VER MSVC_VER BITS [VCDIR] [QTDIR]     ::
+:: Example: build-windows.bat 6.3.8 2022 64                           ::
+::--------------------------------------------------------------------::
 @SET QT_VER=%1
 @SET MSVC_VER=%2
 @SET BITS=%3
@@ -29,29 +30,36 @@
 :bits_32
 @SET MSVC_ARCH=x86
 @SET QT_PATH=
-goto bits_done
+@goto bits_done
 
 :bits_64
 @SET MSVC_ARCH=x64
 @SET QT_PATH=_64
-goto bits_done
+@goto bits_done
 
 :bits_done
+
+@SET VC_DIR="C:\Program Files (x86)\Microsoft Visual Studio\%MSVC_VER%\BuildTools\VC\"
+@IF not defined $4 SET VC_DIR=%4
+
+@SET QT_DIR="C:\Qt\"
+@IF not defined $5 SET QT_DIR=%5
+
 
 ::---------------------------------------------------------::
 :: Add desired Qt version to PATH                          ::
 ::---------------------------------------------------------::
-@SET "PATH=%PATH%;C:\Qt\%QT_VER%\msvc%MSVC_VER%%QT_PATH%\bin"
+@SET "PATH=%PATH%;%QT_DIR%\%QT_VER%\msvc%MSVC_VER%%QT_PATH%\bin"
 
 ::---------------------------------------------------------::
 :: Add jom to PATH                                         ::
 ::---------------------------------------------------------::
-@SET "PATH=%PATH%;C:\Qt\jom"
+@SET "PATH=%PATH%;%QT_DIR%\jom"
 
 ::---------------------------------------------------------::
 :: Run vcvarsall                                           ::
 ::---------------------------------------------------------::
-@call "C:\Program Files (x86)\Microsoft Visual Studio\%MSVC_VER%\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" %MSVC_ARCH%
+call %VC_DIR%\Auxiliary\Build\vcvarsall.bat %MSVC_ARCH%
 
 ::---------------------------------------------------------::
 :: Run qmake to configure the build                        ::
