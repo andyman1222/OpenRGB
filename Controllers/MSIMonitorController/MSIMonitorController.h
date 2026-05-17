@@ -4,7 +4,6 @@
 |   RGBController for MSI monitor (gaming controller)       |
 |                                                           |
 |   Andy Herbert                              2026 May 16   |
-|   Based off the LG monitor controller                     |
 |                                                           |
 |   This file is part of the OpenRGB project                |
 |   SPDX-License-Identifier: GPL-2.0-or-later               |

@@ -4,7 +4,6 @@
 |   RGBController for MSI monitor (gaming controller)       |
 |                                                           |
 |   Andy Herbert                              2026 May 16   |
-|   Based off the LG monitor controller                     |
 |                                                           |
 |   This file is part of the OpenRGB project                |
 |   SPDX-License-Identifier: GPL-2.0-or-later               |
@@ -38,10 +37,10 @@ RGBController_MSIMonitor::RGBController_MSIMonitor(MSIMonitorController* control
     serial                              = controller->GetSerialString();
 
     mode Static;
-    Direct.name                         = "Static";
-    Direct.value                        = MSI_MONITOR_STATIC_MODE_VALUE;
-    Direct.flags                        = MODE_FLAG_HAS_PER_LED_COLOR;
-    Direct.color_mode                   = MODE_COLORS_PER_LED;
+    Static.name                         = "Static";
+    Static.value                        = MSI_MONITOR_STATIC_MODE_VALUE;
+    Static.flags                        = MODE_FLAG_HAS_PER_LED_COLOR;
+    Static.color_mode                   = MODE_COLORS_PER_LED;
     modes.push_back(Static);
 
 
@@ -149,7 +148,7 @@ void RGBController_MSIMonitor::ResizeZone(int /*zone*/, int /*new_size*/)
 void RGBController_MSIMonitor::DeviceUpdateLEDs()
 {
     last_update_time = std::chrono::steady_clock::now();
-    controller->Set(value, colors);
+    controller->Set(modes[active_mode].value, colors);
 }
 
 void RGBController_MSIMonitor::UpdateZoneLEDs(int /*zone*/)

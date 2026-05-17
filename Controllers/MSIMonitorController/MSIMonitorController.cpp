@@ -4,7 +4,6 @@
 |   RGBController for MSI monitor (gaming controller)       |
 |                                                           |
 |   Andy Herbert                              2026 May 16   |
-|   Based off the LG monitor controller                     |
 |                                                           |
 |   This file is part of the OpenRGB project                |
 |   SPDX-License-Identifier: GPL-2.0-or-later               |
@@ -51,6 +50,10 @@ std::string MSIMonitorController::GetSerialString()
 
 void MSIMonitorController::Set(uint8_t mode_value, const std::vector<RGBColor> colors)
 {
+    /*---------------------------------------------------------*\
+    | set up HID SET_REPORT                                     |
+    \*---------------------------------------------------------*/
+
 
     /*---------------------------------------------------------*\
     | Prepare the colors data                                   |
@@ -78,7 +81,7 @@ void MSIMonitorController::Set(uint8_t mode_value, const std::vector<RGBColor> c
     data[offset++] = mode_value;
 
     //0x00'00'00'01'64'00'00'00'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00'ff'00'00;
-    
+
     for(int i = 0; i < 3; i++) {
         data[offset++] = 0x00;
     }
@@ -109,6 +112,6 @@ void MSIMonitorController::Set(uint8_t mode_value, const std::vector<RGBColor> c
     /*---------------------------------------------------------*\
     | Send the data (1 packet)                                  |
     \*---------------------------------------------------------*/
-   
-    hid_write(dev, buf, MSI_MONITOR_PACKET_SIZE);
+
+    hid_send_feature_report(dev, data, MSI_MONITOR_PACKET_SIZE);
 }

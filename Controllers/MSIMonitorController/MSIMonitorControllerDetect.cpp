@@ -22,19 +22,17 @@
 |                                                            |
 \*----------------------------------------------------------*/
 
-void DetectMSIMonitorController
-    (
-    hid_device_info*    info,
-    const std::string&  /*name*/
-    )
+static void DetectMSIMonitorController(hid_device_info* info, const std::string& name)
 {
     hid_device* dev = hid_open_path(info->path);
-    if(dev != nullptr)
+
+    if(dev)
     {
-        MSIMonitorController*     controller     = new MSIMonitorController(dev, info->path);
-        RGBController_MSIMonitor* rgb_controller = new RGBController_MSIMonitor(controller);
+        MSIMonitorController*     controller         = new MSIMonitorController(dev, *info, name);
+        RGBController_MSIMonitor* rgb_controller     = new RGBController_MSIMonitor(controller);
+
         ResourceManager::get()->RegisterRGBController(rgb_controller);
     }
 }
 
-REGISTER_HID_DETECTOR_PU("MSI Gaming Controller", DetectMSIMonitorController, MSI_USB_VID, MSI_USB_PID, 0, 0x01, 0);
+REGISTER_HID_DETECTOR_IPU("MSI Gaming Controller", DetectMSIMonitorController, MSI_USB_VID, MSI_USB_PID, 0, 0x01, 0);
